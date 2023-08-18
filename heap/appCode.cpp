@@ -11,7 +11,7 @@ int reposition(T *arr, int begin, int end)
         while (begin <= end && tmp < arr[end])
             --end;
         arr[begin] = arr[end];
-        while (begin <= end && tmp > arr[begin]
+        while (begin <= end && tmp > arr[begin])
             ++begin;
         arr[end] = arr[begin];
     }
@@ -30,13 +30,10 @@ T select(T *arr, int N, int k)
     do
     {
         position = reposition(arr, begin, end);
-        // 往左侧寻找
         if (position > k - 1)
             end = position - 1;
-        // 往右侧寻找
         else if (position < k - 1)
             begin = position + 1;
-        // 找到了
         else
             return arr[position];
     } while (position != k - 1);
