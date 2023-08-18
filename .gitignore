@@ -2,3 +2,7 @@
 !README.md
 *.exe
 *.txt
+
+.vscode/
+
+test.cpp

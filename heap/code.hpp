@@ -146,13 +146,11 @@ bool isWellConstrucet(int *arr, int N)
     int endParentPos = N / 2;
     for (int i = 0; i < endParentPos; ++i)
     {
-        // 如果右节点存在 那么就比较父节点是否小于这两个子节点
         if (i * 2 + 2 < N)
         {
             if (arr[i] > arr[i * 2 + 1] || arr[i] > arr[i * 2 + 2])
                 return false;
         }
-        // 如果只存在左节点 那么就比较父节点是否小于这个左节点
         else if (i * 2 + 1 < N)
         {
             if (arr[i] > arr[i * 2 + 1])
@@ -162,8 +160,7 @@ bool isWellConstrucet(int *arr, int N)
     return true;
 }
 
-// sink改进
-// 改进思路 减少子节点存在性判断次数 减少元素移动次数
+// 减少子节点存在性判断次数 减少元素移动次数
 template <typename T, int N>
 void sink_improve(T (&arr)[N], int begin, int end, bool (*com)(T &, T &))
 {
@@ -202,7 +199,6 @@ void sink_improve(T (&arr)[N], int begin, int end, bool (*com)(T &, T &))
     }
 }
 
-// swim改进
 // 优化临时变量数量
 template <typename T, int N, typename U>
 void swim_improve(T (&arr)[N], int end, U com)
