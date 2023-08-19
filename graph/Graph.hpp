@@ -10,16 +10,13 @@ private:
     std::vector<std::list<int>> _adj;
     int _N;
 
-private:
-    void dfs(void);
-
 public:
     Graph(int N);
     ~Graph();
-    void depthFirstSearch(int sourse);
     void addEdge(int verticeA, int verticeB);
     void removeEdge(int verticeA, int verticeB);
-    bool contain(int verticeA, int verticeB);
+    bool contained(int verticeA, int verticeB);
+    const std::list<int> &adj(int sourse) const;
 };
 
 Graph::Graph(int N) : _adj(N), _N(N)
@@ -30,6 +27,7 @@ Graph::Graph(int N) : _adj(N), _N(N)
     {
         while ((std::cin >> ch) && ch != '\n')
         {
+            // 只有当该节点没有被记录过才是合法节点
             if (std::find(_adj[i].begin(), _adj[i].end(), ch - '0') != _adj[i].end())
                 _adj[i].emplace_back(ch - '0');
         }
@@ -38,7 +36,7 @@ Graph::Graph(int N) : _adj(N), _N(N)
 
 void Graph::addEdge(int verticeA, int verticeB)
 {
-    if (contain(verticeA, verticeB))
+    if (contained(verticeA, verticeB))
         return;
 
     _adj[verticeA].push_back(verticeB);
@@ -47,18 +45,16 @@ void Graph::addEdge(int verticeA, int verticeB)
 
 void Graph::removeEdge(int verticeA, int verticeB)
 {
-    if (!contain(verticeA, verticeB))
+    if (!contained(verticeA, verticeB))
         return;
 
     _adj[verticeA].remove(verticeB);
     _adj[verticeB].remove(verticeA);
 }
 
-bool Graph::contain(int verticeA, int verticeB)
+bool Graph::contained(int verticeA, int verticeB)
 {
-    if (verticeA < 0 || verticeA > _N)
-        return false;
-    if (verticeB < 0 || verticeB > _N)
+    if (verticeA < 0 || verticeA > _N || verticeB < 0 || verticeB > _N)
         return false;
 
     if ((std::find(_adj[verticeA].begin(), _adj[verticeA].end(), verticeB)) == _adj[verticeA].end())
@@ -69,8 +65,7 @@ bool Graph::contain(int verticeA, int verticeB)
     return true;
 }
 
-void Graph::depthFirstSearch(int sourse)
+const std::list<int> &Graph::adj(int sourse) const
 {
-    auto passed = std::make_unique<bool[]>(_N);
-    std::fill(passed.get(), &passed[_N], false);
+    return _adj[sourse];
 }
