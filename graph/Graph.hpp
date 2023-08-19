@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <list>
@@ -12,24 +14,28 @@ private:
 
 public:
     Graph(int N);
-    ~Graph();
+    ~Graph() = default;
     void addEdge(int verticeA, int verticeB);
     void removeEdge(int verticeA, int verticeB);
     bool contained(int verticeA, int verticeB);
     const std::list<int> &adj(int sourse) const;
+    int size(void) const noexcept { return _N; }
+    void show(void) const;
 };
 
 Graph::Graph(int N) : _adj(N), _N(N)
 {
-    char ch;
+    int ch;
 
     for (int i = 0; i < _N; ++i)
     {
-        while ((std::cin >> ch) && ch != '\n')
+        while (std::cin >> ch)
         {
             // 只有当该节点没有被记录过才是合法节点
-            if (std::find(_adj[i].begin(), _adj[i].end(), ch - '0') != _adj[i].end())
-                _adj[i].emplace_back(ch - '0');
+            if (std::find(_adj[i].begin(), _adj[i].end(), ch) == _adj[i].end())
+                _adj[i].emplace_back(ch);
+            if (std::cin.get() == '\n')
+                break;
         }
     }
 }
@@ -68,4 +74,14 @@ bool Graph::contained(int verticeA, int verticeB)
 const std::list<int> &Graph::adj(int sourse) const
 {
     return _adj[sourse];
+}
+
+void Graph::show() const
+{
+    for (auto &i : _adj)
+    {
+        for (auto &k : i)
+            std::cout << k << ' ';
+        std::cout << std::endl;
+    }
 }
