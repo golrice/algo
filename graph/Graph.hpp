@@ -21,23 +21,13 @@ public:
     const std::list<int> &adj(int sourse) const;
     int size(void) const noexcept { return _N; }
     void show(void) const;
+    void show(std::ostream &os);
+    void show(std::ostream &os, int sourse) const;
+    void show(std::ostream &os, int sourse, int dest) const;
 };
 
 Graph::Graph(int N) : _adj(N), _N(N)
 {
-    int ch;
-
-    for (int i = 0; i < _N; ++i)
-    {
-        while (std::cin >> ch)
-        {
-            // 只有当该节点没有被记录过才是合法节点
-            if (std::find(_adj[i].begin(), _adj[i].end(), ch) == _adj[i].end())
-                _adj[i].emplace_back(ch);
-            if (std::cin.get() == '\n')
-                break;
-        }
-    }
 }
 
 void Graph::addEdge(int verticeA, int verticeB)
@@ -83,5 +73,16 @@ void Graph::show() const
         for (auto &k : i)
             std::cout << k << ' ';
         std::cout << std::endl;
+    }
+}
+
+// 展示图里的内容
+void Graph::show(std::ostream &os, int sourse, int dest) const
+{
+    os << sourse << " -> ";
+    for (auto &i : _adj[sourse])
+    {
+        if (i == dest)
+            os << i << ' ';
     }
 }
