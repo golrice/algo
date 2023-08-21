@@ -8,31 +8,31 @@
 class DirectedDFS
 {
 public:
-    DirectedDFS(const DiGraph &graph, int startVertex);
+    DirectedDFS(const DiGraph &graph);
     ~DirectedDFS() = default;
     // Returns true if the vertex is visited
     bool visited(int vertex) const { return _marked[vertex]; }
     // Returns the path from the start vertex to the given vertex
     std::stack<int> pathTo(int vertex) const;
-    std::stack<int> pathFromTo(const DiGraph &graph, int start_vertex, int end_vertex);
-    void search(const DiGraph &graph, int startVertex);
     void print(void) const;
+    void dfs(const DiGraph &graph, int vertex);
 
 private:
-    void dfs(const DiGraph &graph, int vertex);
     void clear(void);
 
 private:
     int _size;
-    int _startVertex;
     std::unique_ptr<bool[]> _marked;
     std::unique_ptr<int[]> _prv;
 };
 
-DirectedDFS::DirectedDFS(const DiGraph &graph, int startVertex)
-    : _size(graph.getNumVertices()), _startVertex(startVertex), _marked(std::make_unique<bool[]>(_size)), _prv(std::make_unique<int[]>(_size))
+DirectedDFS::DirectedDFS(const DiGraph &graph)
+    : _size(graph.getNumVertices()), _marked(std::make_unique<bool[]>(_size)), _prv(std::make_unique<int[]>(_size))
 {
-    search(graph, startVertex);
+    clear();
+    for (int i = 0; i < _size; ++i)
+        if (!_marked[i])
+            dfs(graph, i);
 }
 
 void DirectedDFS::print(void) const
@@ -65,27 +65,13 @@ std::stack<int> DirectedDFS::pathTo(int vertex) const
     std::stack<int> path;
     int currentVertex = vertex;
 
-    path.push(currentVertex);
-
-    while (_prv[currentVertex] != currentVertex)
+    do
     {
-        path.push(_prv[currentVertex]);
+        path.push(currentVertex);
         currentVertex = _prv[currentVertex];
-    }
+    } while (currentVertex != _prv[currentVertex]);
 
     return path;
-}
-
-std::stack<int> DirectedDFS::pathFromTo(const DiGraph &graph, int start_vertex, int end_vertex)
-{
-    _startVertex = start_vertex;
-    search(graph, end_vertex);
-}
-
-void DirectedDFS::search(const DiGraph &graph, int startVertex)
-{
-    clear();
-    dfs(graph, startVertex);
 }
 
 void DirectedDFS::dfs(const DiGraph &graph, int vertex)
@@ -93,7 +79,7 @@ void DirectedDFS::dfs(const DiGraph &graph, int vertex)
     _marked[vertex] = true;
 
     std::list<int> linked_vertice = graph.getLink(vertex);
-    for (auto current_vertex : linked_vertice)
+    for (int current_vertex : linked_vertice)
     {
         if (_marked[current_vertex])
             continue;

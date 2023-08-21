@@ -12,7 +12,7 @@ public:
     std::stack<int> cycle() const;
 
 private:
-    void clear(const DiGraph &G);
+    void clear();
     void dfs(const DiGraph &G, int v);
 
 private:
@@ -27,8 +27,10 @@ private:
 DirectedCycle::DirectedCycle(const DiGraph &G)
     : _inCycle(false), _size(G.getNumVertices()), _marked(std::make_unique<bool[]>(_size)), _prv(std::make_unique<int[]>(_size)), _in_stack(std::make_unique<bool[]>(_size))
 {
-    clear(G);
-    int current_vertex = 0;
+    clear();
+    for (int i = 0; i < _size; ++i)
+        if (!_marked[i])
+            dfs(G, i);
 }
 
 void DirectedCycle::dfs(const DiGraph &G, int vertex)
@@ -60,9 +62,9 @@ void DirectedCycle::dfs(const DiGraph &G, int vertex)
     _in_stack[vertex] = false;
 }
 
-void DirectedCycle::clear(const DiGraph &G)
+void DirectedCycle::clear()
 {
-    for (int v = 0; v < G.getNumVertices(); v++)
+    for (int v = 0; v < _size; v++)
     {
         _marked[v] = false;
         _prv[v] = v;
