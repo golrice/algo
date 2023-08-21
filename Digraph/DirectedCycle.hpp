@@ -8,7 +8,7 @@ class DirectedCycle
 {
 public:
     DirectedCycle(const DiGraph &G);
-    bool hasCycle() const;
+    bool hasCycle() const { return _inCycle; }
     std::stack<int> cycle() const;
 
 private:

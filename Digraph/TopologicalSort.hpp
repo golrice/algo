@@ -22,13 +22,16 @@ Topological::Topological(const DiGraph &graph)
     if (!cycle.hasCycle())
     {
         DirectedOrder order(graph);
-        _topo_order = order.getRearOrder();
+        _topo_order = order.getReverseOrder();
     }
 }
 
 void Topological::print() const
 {
-    while (!_topo_order.empty())
-        for (int i : _topo_order)
-            std::cout << i << " ";
+    std::stack<int> tmp_stack = _topo_order;
+    while (!tmp_stack.empty())
+    {
+        std::cout << tmp_stack.top() << " ";
+        tmp_stack.pop();
+    }
 }

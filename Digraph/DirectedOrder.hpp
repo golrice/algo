@@ -36,16 +36,15 @@ DirectedOrder::DirectedOrder(const DiGraph &graph) : _marked(std::make_unique<bo
 void DirectedOrder::dfs(const DiGraph &graph, int v)
 {
     _marked[v] = true;
+    _front_order.push(v);
 
     auto &link_vertice = graph.getLink(v);
     for (int current_vertex : link_vertice)
     {
-        _front_order.push(current_vertex);
         if (_marked[current_vertex])
             continue;
-
         dfs(graph, current_vertex);
-        _rear_order.push(current_vertex);
-        _reverse_order.push(current_vertex);
     }
+    _rear_order.push(v);
+    _reverse_order.push(v);
 }
