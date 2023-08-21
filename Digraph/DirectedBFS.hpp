@@ -9,7 +9,6 @@ class DirectedBFS
 {
 public:
     DirectedBFS(const DiGraph &graph);
-    void search(int start_vertex);
     std::stack<int> path(int vertex);
 
 private:
@@ -17,50 +16,46 @@ private:
 
 private:
     const DiGraph &_graph;
-    std::unique_ptr<bool[]> _visited;
+    std::unique_ptr<bool[]> _marked;
     std::unique_ptr<int[]> _path;
-    int _start_vertex;
-    int _end_vertex;
     int _number_vertice;
 };
 
 DirectedBFS::DirectedBFS(const DiGraph &graph)
-    : _graph(graph), _visited(std::make_unique<bool[]>(_graph.getNumVertices())), _path(std::make_unique<int[]>(_graph.getNumVertices())), _number_vertice(_graph.getNumVertices()), _start_vertex(-1), _end_vertex(-1)
+    : _graph(graph), _marked(std::make_unique<bool[]>(_graph.getNumVertices())),
+      _path(std::make_unique<int[]>(_graph.getNumVertices())), _number_vertice(_graph.getNumVertices())
 {
+    clear();
+    // bfs
+    std::queue<int> wait_to_visit;
+    wait_to_visit.push(0);
+
+    while (!wait_to_visit.empty())
+    {
+        // start to visit
+        int v = wait_to_visit.front();
+        wait_to_visit.pop();
+
+        if (!_marked[v])
+        {
+            _marked[v] = true;
+            auto &neighbors = _graph.getLink(v);
+
+            for (int w : neighbors)
+            {
+                _path[w] = v;
+                wait_to_visit.push(w);
+            }
+        }
+    }
 }
 
 void DirectedBFS::clear()
 {
     for (int i = 0; i < _number_vertice; ++i)
     {
-        _visited[i] = false;
+        _marked[i] = false;
         _path[i] = i;
-    }
-}
-
-void DirectedBFS::search(int start_vertex)
-{
-    std::queue<int> queue;
-    queue.push(start_vertex);
-    _visited[start_vertex] = true;
-
-    _start_vertex = start_vertex;
-
-    while (!queue.empty())
-    {
-        int current_vertex = queue.front();
-        queue.pop();
-
-        auto &adj = _graph.getLink(current_vertex);
-        for (auto i : adj)
-        {
-            if (_visited[i])
-                continue;
-
-            queue.push(i);
-            _path[i] = current_vertex;
-            _visited[i] = true;
-        }
     }
 }
 
