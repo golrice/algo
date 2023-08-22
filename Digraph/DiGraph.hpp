@@ -12,11 +12,9 @@ public:
 
     void addEdge(int from, int to);
     void removeEdge(int from, int to);
-    const std::list<int> getLink(int vertex) const
-    {
-        return adjList[vertex];
-    }
+    const std::list<int> getLink(int vertex) const { return adjList[vertex]; }
     void print() const;
+    DiGraph reverse() const;
 
     int getNumVertices() const noexcept { return numVertices; }
     int getNumEdges() const noexcept { return numEdges; }
@@ -57,4 +55,18 @@ void DiGraph::print() const
         }
         std::cout << std::endl;
     }
+}
+
+DiGraph DiGraph::reverse() const
+{
+    DiGraph rev(numVertices);
+
+    for (int i = 0; i < numVertices; ++i)
+    {
+        const std::list<int> &tmp_adj = adjList[i];
+        for (int v : tmp_adj)
+            rev.addEdge(v, i);
+    }
+
+    return rev;
 }
